@@ -1428,8 +1428,10 @@
             font-weight: 500;
         }
 
-        /* --- Interactive Study Path Tabs --- */
-        #study-path { background: #fff; }
+        /* --- Fixed Study Path Tabs --- */
+        #study-path { 
+            background: #fff; 
+        }
         
         .path-tabs { 
             display: flex; 
@@ -1439,7 +1441,7 @@
             flex-wrap: wrap; 
         }
         
-        .path-tabs button { 
+        .path-tab-button { 
             background: linear-gradient(145deg, #ffffff, #f0f0f0); 
             border: 3px solid transparent; 
             padding: 1.2rem 2.5rem; 
@@ -1452,9 +1454,10 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: var(--text-color);
         }
 
-        .path-tabs button::before {
+        .path-tab-button::before {
             content: '';
             position: absolute;
             top: 0;
@@ -1466,30 +1469,35 @@
             z-index: -1;
         }
         
-        .path-tabs button:hover {
+        .path-tab-button:hover {
             transform: translateY(-5px) scale(1.05);
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             color: white;
         }
 
-        .path-tabs button:hover::before {
+        .path-tab-button:hover::before {
             left: 0;
         }
         
-        .path-tabs button.active { 
+        .path-tab-button.active { 
             background: var(--gradient-primary); 
-            color: #fff; 
+            color: #fff !important; 
             border-color: var(--primary-color);
             transform: translateY(-5px);
             box-shadow: 0 15px 35px rgba(164, 31, 36, 0.3);
         }
 
-        .path-tabs button i {
+        .path-tab-button.active::before {
+            left: 0;
+        }
+
+        .path-tab-button i {
             margin-right: 8px;
             transition: transform 0.3s ease;
         }
 
-        .path-tabs button:hover i {
+        .path-tab-button:hover i,
+        .path-tab-button.active i {
             transform: rotate(360deg);
         }
 
@@ -1500,10 +1508,12 @@
             border-radius: 20px; 
             border: 1px solid #eee;
             animation: fadeInUp 0.5s ease-out;
+            opacity: 0;
         }
         
         .path-content-item.active { 
             display: block; 
+            opacity: 1;
         }
         
         .path-content-item h3 { 
@@ -1974,6 +1984,8 @@
             .highlights-grid { grid-template-columns: 1fr; }
             .ylo-timeline { grid-template-columns: 1fr; }
             .mosaic-filter { flex-direction: column; align-items: center; }
+            .path-tabs { flex-direction: column; align-items: center; }
+            .path-tab-button { width: 100%; max-width: 300px; text-align: center; }
         }
 
         @keyframes slideDown {
@@ -2054,7 +2066,7 @@
                     </div>
                     <div class="stat-item" data-count="100">
                         <span class="stat-number">0</span>
-                        <span class="stat-label">% อัตราการได้งานภายใน 3 ปี</span>
+                        <span class="stat-label">% อัตราการได้งาน</span>
                     </div>
                 </div>
             </div>
@@ -2456,18 +2468,18 @@
                 </div>
 
                 <!-- Enhanced Animated Company Word Cloud -->
-                <div class="company-cloud-container">
+                 <div class="company-cloud-container">
                     <div class="company-cloud">
                         <!-- Tier 1: Major Corporations -->
                         <span class="company-tag tier-1">SCB/SCB TechX</span>
- 			<span class="company-tag tier-1">CP Group</span>
+            <span class="company-tag tier-1">CP Group</span>
                         <span class="company-tag tier-1">INET</span>
                         <span class="company-tag tier-1">Exxon Mobile</span>
                         <span class="company-tag tier-1">BBL</span>
                         <span class="company-tag tier-1">ธนาคารกรุงศรี</span>
                         <span class="company-tag tier-1">Microsoft</span>
-			<span class="company-tag tier-1">Huawei</span>
-			<span class="company-tag tier-1">TCC Technology</span>
+            <span class="company-tag tier-1">Huawei</span>
+            <span class="company-tag tier-1">TCC Technology</span>
                         
                         <!-- Tier 2: Large Companies -->
                         <span class="company-tag tier-2">True Corporation</span>
@@ -2476,9 +2488,9 @@
                         <span class="company-tag tier-2">การไฟฟ้าส่วนภูมิภาค</span>
                         <span class="company-tag tier-2">กสท โทรคมนาคม</span>
                         <span class="company-tag tier-2">น่าอยู่ คอร์ปอเรชั่น</span>
- 			<span class="company-tag tier-2">WOXA</span>
- 			<span class="company-tag tier-2">Alphametrics</span>
-			<span class="company-tag tier-2">GOFIVE</span>
+            <span class="company-tag tier-2">WOXA</span>
+            <span class="company-tag tier-2">Alphametrics</span>
+            <span class="company-tag tier-2">GOFIVE</span>
     
                         
                         <!-- Tier 3: Medium Companies -->
@@ -2556,7 +2568,7 @@
             </div>
         </section>
 
-        <!-- Study Path Section -->
+        <!-- Fixed Study Path Section -->
         <section id="study-path">
             <div class="container">
                 <h2>แผนผังเส้นทางอาชีพ</h2>
@@ -2809,20 +2821,20 @@
                 <div class="footer-section">
                     <h4>ติดต่อเรา</h4>
                     <p><i class="fa-solid fa-location-dot"></i> วิทยาลัยการคอมพิวเตอร์<br>มหาวิทยาลัยขอนแก่น อำเภอเมือง จังหวัดขอนแก่น 40002</p>
-                    <p><i class="fa-solid fa-phone"></i> โทร:  043-009700 ต่อ 44456, 44459, 44457 </p>
-                    <p><i class="fa-solid fa-envelope"></i> อีเมล: computing.kku@kku.ac.th</p>
+                    <p><i class="fa-solid fa-phone"></i> โทร: 043-202-xxx</p>
+                    <p><i class="fa-solid fa-envelope"></i> อีเมล: info@cs.kku.ac.th</p>
                 </div>
                 <div class="footer-section">
                     <h4>ลิงก์ที่เกี่ยวข้อง</h4>
                     <p><a href="https://www.kku.ac.th">มหาวิทยาลัยขอนแก่น</a></p>
-                    <p><a href="https://computing.kku.ac.th">วิทยาลัยการคอมพิวเตอร์</a></p>
+                    <p><a href="https://cc.kku.ac.th">วิทยาลัยการคอมพิวเตอร์</a></p>
                     <p><a href="https://reg.kku.ac.th">กิจการนักศึกษา</a></p>
                     <p><a href="https://admissions.kku.ac.th">การรับเข้าศึกษา</a></p>
                 </div>
                 <div class="footer-section">
                     <h4>ติดตามเรา</h4>
                     <p>
-                        <a href="https://www.facebook.com/computing.kku"><i class="fab fa-facebook"></i> Facebook</a><br>
+                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a><br>
                         <a href="#"><i class="fab fa-instagram"></i> Instagram</a><br>
                         <a href="#"><i class="fab fa-youtube"></i> YouTube</a><br>
                         <a href="#"><i class="fab fa-line"></i> LINE Official</a>
@@ -2965,7 +2977,10 @@
                     if (entry.target.classList.contains('stat-item')) {
                         const countElement = entry.target.querySelector('.stat-number');
                         const targetCount = parseInt(entry.target.dataset.count);
-                        animateCounter(countElement, targetCount);
+                        if (!countElement.classList.contains('animated')) {
+                            countElement.classList.add('animated');
+                            animateCounter(countElement, targetCount);
+                        }
                     }
 
                     // Partnership stats animation
@@ -3012,10 +3027,10 @@
 
         // Set data attributes for partnership stats
         const partnershipStats = document.querySelectorAll('.partnership-stat .stat-number');
-        partnershipStats[0].dataset.count = '200';
-        partnershipStats[1].dataset.count = '95';
-        partnershipStats[2].dataset.count = '85';
-        partnershipStats[3].textContent = '45K+';
+        if (partnershipStats[0]) partnershipStats[0].dataset.count = '200';
+        if (partnershipStats[1]) partnershipStats[1].dataset.count = '95';
+        if (partnershipStats[2]) partnershipStats[2].dataset.count = '85';
+        if (partnershipStats[3]) partnershipStats[3].textContent = '45K+';
 
         // Initialize company tags with initial styles
         document.querySelectorAll('.company-tag').forEach(tag => {
@@ -3033,31 +3048,51 @@
         // --- Mobile Menu ---
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            const icon = hamburger.querySelector('i');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-times');
-        });
+        if (hamburger) {
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = hamburger.querySelector('i');
+                icon.classList.toggle('fa-bars');
+                icon.classList.toggle('fa-times');
+            });
+        }
 
-        // --- Study Path Tabs ---
-        const pathTabs = document.querySelectorAll('.path-tab-button');
-        const pathContents = document.querySelectorAll('.path-content-item');
-        
-        pathTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active from all tabs and contents
-                pathTabs.forEach(item => item.classList.remove('active'));
-                pathContents.forEach(item => item.classList.remove('active'));
+        // --- FIXED Study Path Tabs ---
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing tabs...');
+            
+            const pathTabs = document.querySelectorAll('.path-tab-button');
+            const pathContents = document.querySelectorAll('.path-content-item');
+            
+            console.log('Found tabs:', pathTabs.length);
+            console.log('Found contents:', pathContents.length);
+            
+            pathTabs.forEach((tab, index) => {
+                console.log(`Tab ${index}:`, tab.dataset.path);
                 
-                // Add active to clicked tab
-                tab.classList.add('active');
-                
-                // Show corresponding content
-                const targetContent = document.getElementById('path-' + tab.dataset.path);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                }
+                tab.addEventListener('click', function() {
+                    console.log('Tab clicked:', this.dataset.path);
+                    
+                    // Remove active from all tabs
+                    pathTabs.forEach(t => t.classList.remove('active'));
+                    pathContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const targetPath = this.dataset.path;
+                    const targetContent = document.getElementById(`path-${targetPath}`);
+                    
+                    console.log('Target content:', targetContent);
+                    
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                        console.log('Content activated');
+                    } else {
+                        console.error('Target content not found for:', targetPath);
+                    }
+                });
             });
         });
 
