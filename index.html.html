@@ -1,0 +1,3170 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>วท.บ. วิทยาการคอมพิวเตอร์ | วิทยาลัยการคอมพิวเตอร์ มหาวิทยาลัยขอนแก่น</title>
+    
+    <!-- Google Fonts: Kanit & Sarabun -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #A41F24;
+            --secondary-color: #F3A712;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --text-color: #333;
+            --font-family-header: 'Kanit', sans-serif;
+            --font-family-body: 'Sarabun', sans-serif;
+            --gradient-primary: linear-gradient(135deg, #A41F24 0%, #F3A712 100%);
+            --gradient-secondary: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        html { 
+            scroll-behavior: smooth; 
+        }
+        
+        body { 
+            font-family: var(--font-family-body); 
+            line-height: 1.8; 
+            color: var(--text-color); 
+            background-color: #fff;
+            overflow-x: hidden; 
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: auto; 
+            overflow: hidden; 
+            padding: 0 2rem; 
+        }
+        
+        section { 
+            padding: 6rem 0; 
+            position: relative;
+        }
+        
+        h1, h2, h3, h4 { 
+            font-family: var(--font-family-header); 
+            font-weight: 700; 
+            line-height: 1.3; 
+        }
+        
+        h2 { 
+            font-size: 3rem; 
+            text-align: center; 
+            margin-bottom: 4rem; 
+            color: var(--dark-color); 
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        
+        h2::after { 
+            content: ''; 
+            position: absolute; 
+            bottom: -1rem; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 100px; 
+            height: 6px; 
+            background: var(--gradient-primary); 
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        h2:hover::after {
+            width: 150px;
+        }
+
+        /* --- Loading Screen --- */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.5s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- Components --- */
+        .btn { 
+            display: inline-block; 
+            padding: 1rem 2.5rem; 
+            text-decoration: none; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+            font-family: var(--font-family-header);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary { 
+            background: var(--gradient-primary); 
+            color: #fff; 
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(164, 31, 36, 0.4);
+        }
+        
+        .btn-secondary { 
+            background: transparent; 
+            color: #fff; 
+            border: 2px solid #fff; 
+            margin-left: 1rem; 
+        }
+        
+        .btn:hover { 
+            transform: translateY(-5px) scale(1.05); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        /* --- Header & Navigation --- */
+        .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 1rem 2rem; 
+            background: rgba(255,255,255,0.95); 
+            backdrop-filter: blur(20px); 
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1); 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 2rem;
+            background: rgba(255,255,255,0.98);
+            box-shadow: 0 2px 30px rgba(0,0,0,0.15);
+        }
+        
+        .navbar .logo { 
+            font-size: 1.8rem; 
+            font-weight: 700; 
+            color: var(--primary-color); 
+            text-decoration: none; 
+            font-family: var(--font-family-header);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .navbar .logo:hover::after {
+            width: 100%;
+        }
+        
+        .navbar .nav-links { 
+            display: flex; 
+            list-style: none; 
+        }
+        
+        .navbar .nav-links li a { 
+            padding: 0.8rem 1.5rem; 
+            text-decoration: none; 
+            color: var(--text-color); 
+            font-weight: 500; 
+            transition: all 0.3s ease;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .navbar .nav-links li a::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: var(--gradient-primary);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+        
+        .navbar .nav-links li a:hover {
+            color: white;
+        }
+
+        .navbar .nav-links li a:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .hamburger { 
+            display: none; 
+            cursor: pointer; 
+            font-size: 1.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger:hover {
+            transform: rotate(90deg);
+        }
+
+        /* --- Hero Section --- */
+        .hero { 
+            background: linear-gradient(135deg, rgba(20, 30, 40, 0.8), rgba(44, 62, 80, 0.7)), 
+                        url('https://drive.google.com/thumbnail?id=1TzQnAMiq659Z3dbJTtrZ10dl9tkQsER0&sz=w1920') center center/cover; 
+            color: #fff; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            padding: 0 1rem; 
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: var(--gradient-primary); 
+            opacity: 0.1;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
+        }
+        
+        .hero-content { 
+            position: relative; 
+            z-index: 2;
+            animation: heroFadeIn 2s ease-out;
+        }
+
+        @keyframes heroFadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        .hero h1 { 
+            font-size: 4.5rem; 
+            margin-bottom: 1rem; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            background: linear-gradient(45deg, #fff, var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+        
+        .hero .subtitle { 
+            font-size: 1.6rem; 
+            margin-bottom: 0.5rem; 
+            color: var(--secondary-color); 
+            font-weight: 600;
+            animation: slideInLeft 1.5s ease-out 0.5s both;
+        }
+
+        @keyframes slideInLeft {
+            from { 
+                opacity: 0; 
+                transform: translateX(-50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+        
+        .hero p { 
+            font-size: 1.4rem; 
+            margin-bottom: 3rem; 
+            max-width: 800px; 
+            font-family: var(--font-family-body); 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            animation: slideInRight 1.5s ease-out 0.7s both;
+        }
+
+        @keyframes slideInRight {
+            from { 
+                opacity: 0; 
+                transform: translateX(50px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+
+        /* --- Stats Banner with Counter Animation --- */
+        .stats-banner { 
+            background: var(--gradient-primary); 
+            color: #fff; 
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.05) 10px,
+                rgba(255,255,255,0.05) 20px
+            );
+            animation: slidePattern 20s linear infinite;
+        }
+
+        @keyframes slidePattern {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 2rem; 
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .stat-item { 
+            padding: 2rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        
+        .stat-item .stat-number { 
+            font-size: 4rem; 
+            font-weight: 700; 
+            display: block; 
+            color: var(--secondary-color);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover .stat-number {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 10px rgba(243, 167, 18, 0.5));
+        }
+        
+        .stat-item .stat-label { 
+            font-size: 1.2rem; 
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        /* --- Interactive Highlights Section --- */
+        #highlights { 
+            background: var(--light-color);
+            position: relative;
+        }
+
+        .highlights-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 2.5rem; 
+        }
+        
+        .highlight-card { 
+            background: #fff; 
+            padding: 3rem; 
+            text-align: center; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+            position: relative; 
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .highlight-card::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; 
+            left: -100%; 
+            width: 100%; 
+            height: 6px; 
+            background: var(--gradient-primary); 
+            transition: left 0.6s ease;
+        }
+
+        .highlight-card:hover::before {
+            left: 0;
+        }
+
+        .highlight-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(164, 31, 36, 0.05), transparent);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+        }
+        
+        .highlight-card:hover { 
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .highlight-card:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .highlight-card i { 
+            font-size: 4rem; 
+            color: var(--primary-color); 
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .highlight-card:hover i {
+            color: var(--secondary-color);
+            transform: scale(1.2) rotateY(360deg);
+        }
+        
+        .highlight-card h3 { 
+            font-size: 1.8rem; 
+            margin-bottom: 1.5rem; 
+            color: var(--dark-color);
+            position: relative;
+            z-index: 2;
+            transition: color 0.3s ease;
+        }
+
+        .highlight-card:hover h3 {
+            color: var(--primary-color);
+        }
+        
+        .highlight-card p { 
+            font-size: 1.1rem; 
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- Enhanced Curriculum Structure --- */
+        #curriculum { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            position: relative;
+            overflow: hidden;
+        }
+
+        #curriculum::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-conic-gradient(
+                from 0deg,
+                transparent 0deg 30deg,
+                rgba(255,255,255,0.03) 30deg 60deg
+            );
+            animation: rotate 60s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #curriculum h2 { 
+            color: white; 
+            position: relative;
+            z-index: 2;
+        }
+        
+        #curriculum h2::after { 
+            background: var(--secondary-color); 
+        }
+
+        .curriculum-showcase {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .curriculum-overview { 
+            display: grid; 
+            grid-template-columns: 1fr 2fr; 
+            gap: 4rem; 
+            align-items: start; 
+            margin-bottom: 4rem; 
+        }
+        
+        .curriculum-summary { 
+            background: rgba(255,255,255,0.1); 
+            padding: 3rem; 
+            border-radius: 20px; 
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .curriculum-summary h3 { 
+            color: var(--secondary-color); 
+            margin-bottom: 2rem; 
+            font-size: 2.2rem;
+        }
+
+        .curriculum-summary p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .curriculum-summary strong {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+        
+        .curriculum-breakdown { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 2rem; 
+        }
+        
+        .subject-group { 
+            background: rgba(255,255,255,0.1); 
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 5px;
+            background: var(--secondary-color);
+            transition: left 0.6s ease;
+        }
+
+        .subject-group:hover::before {
+            left: 0;
+        }
+
+        .subject-group:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .subject-group h4 { 
+            color: var(--secondary-color); 
+            margin-bottom: 1.5rem; 
+            font-size: 1.4rem;
+        }
+        
+        .subject-group .credits { 
+            font-size: 3.5rem; 
+            font-weight: 700; 
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .subject-group:hover .credits {
+            color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        
+        .subject-group .credits-label { 
+            font-size: 1rem; 
+            color: rgba(255,255,255,0.8); 
+            margin-top: 0.5rem;
+        }
+
+        .subject-group p {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
+        }
+
+        /* --- Enhanced YLO Progress Timeline --- */
+        .ylo-progress {
+            margin-top: 4rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ylo-progress h3 {
+            color: white; 
+            margin-bottom: 3rem; 
+            font-size: 2.5rem;
+        }
+
+        .ylo-timeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .ylo-year {
+            background: rgba(255,255,255,0.1);
+            padding: 2.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ylo-year::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--secondary-color);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .ylo-year:hover::before {
+            transform: scaleX(1);
+        }
+
+        .ylo-year:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .ylo-year-number {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0 auto 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .ylo-year:hover .ylo-year-number {
+            background: white;
+            color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .ylo-year-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .ylo-year-subtitle {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .ylo-year-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.9);
+            text-align: left;
+        }
+
+        /* --- Enhanced Activities Section with Skills Focus --- */
+        #activities { 
+            background: #fff;
+            position: relative;
+        }
+        
+        .activities-intro {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .activities-intro h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .activities-intro p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .skills-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .skills-category {
+            background: var(--light-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skills-category::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 5px;
+            transition: left 0.6s ease;
+        }
+
+        .skills-category.hard-skills::before {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .skills-category.soft-skills::before {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+
+        .skills-category:hover::before {
+            left: 0;
+        }
+
+        .skills-category:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .skills-category-header {
+            display: flex;
+            align-items: center;
+            padding: 3rem 3rem 0 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .skills-category-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            margin-right: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .skills-category.hard-skills .skills-category-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .skills-category.soft-skills .skills-category-icon {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .skills-category:hover .skills-category-icon {
+            transform: scale(1.1) rotate(360deg);
+        }
+
+        .skills-category-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        /* --- Enhanced Mosaic Gallery --- */
+        .mosaic-gallery {
+            margin: 4rem 0;
+            padding: 3rem;
+            background: var(--light-color);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mosaic-gallery::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(164, 31, 36, 0.03),
+                rgba(164, 31, 36, 0.03) 20px,
+                transparent 20px,
+                transparent 40px
+            );
+            animation: patternMove 30s linear infinite;
+        }
+
+        @keyframes patternMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .mosaic-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mosaic-header h3 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .mosaic-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mosaic-filter {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-family-header);
+            font-weight: 600;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(164, 31, 36, 0.3);
+        }
+
+        .mosaic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mosaic-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: mosaicFadeIn 0.6s ease-out forwards;
+        }
+
+        .mosaic-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .mosaic-item.large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .mosaic-item.wide {
+            grid-column: span 2;
+        }
+
+        .mosaic-item.tall {
+            grid-row: span 2;
+        }
+
+        .mosaic-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .mosaic-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .mosaic-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: white;
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+        .mosaic-item:hover .mosaic-overlay {
+            transform: translateY(0);
+        }
+
+        .mosaic-overlay h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .mosaic-overlay .activity-type {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        @keyframes mosaicFadeIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .skills-category-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .skills-category-content {
+            padding: 0 3rem 3rem 3rem;
+        }
+
+        .skills-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .skills-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .skills-list li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .skills-list-icon {
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            margin-top: 0.2rem;
+            min-width: 20px;
+        }
+
+        .skills-category.hard-skills .skills-list-icon {
+            color: #667eea;
+        }
+
+        .skills-category.soft-skills .skills-list-icon {
+            color: #f5576c;
+        }
+
+        .skills-list-content h4 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .skills-list-content p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        .activities-content { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 4rem; 
+            align-items: center; 
+            margin-top: 4rem;
+        }
+        
+        .activities-content img { 
+            width: 100%; 
+            border-radius: 15px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); 
+        }
+        
+        .activities-content h3 { 
+            font-size: 2.2rem; 
+            color: var(--primary-color); 
+            margin-bottom: 1.5rem; 
+        }
+        
+        .activities-list { 
+            list-style: none; 
+        }
+        
+        .activities-list li { 
+            display: flex; 
+            align-items: flex-start; 
+            margin-bottom: 1.5rem; 
+            padding: 1rem; 
+            background: var(--light-color); 
+            border-radius: 8px; 
+            transition: all 0.3s ease;
+        }
+
+        .activities-list li:hover {
+            background: white;
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .activities-list i { 
+            font-size: 1.5rem; 
+            color: var(--primary-color); 
+            margin-right: 1rem; 
+            margin-top: 2px; 
+        }
+        
+        .activities-list strong { 
+            color: var(--primary-color); 
+        }
+
+        /* --- Enhanced Industry Collaboration with Animated Word Cloud --- */
+        #collaboration { 
+            background: linear-gradient(135deg, #0f0c29 0%, #24243e 50%, #302b63 100%); 
+            color: white; 
+            position: relative;
+            overflow: hidden;
+        }
+
+        #collaboration::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(164, 31, 36, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(243, 167, 18, 0.1) 0%, transparent 50%);
+        }
+
+        .collaboration-content { 
+            text-align: center; 
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        #collaboration h2 {
+            color: white;
+        }
+
+        #collaboration h2::after {
+            background: var(--secondary-color);
+        }
+        
+        .collaboration-content h3 { 
+            font-size: 2rem; 
+            color: var(--secondary-color); 
+            margin-bottom: 1rem; 
+        }
+
+        .collaboration-content p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* --- Animated Company Word Cloud --- */
+        .company-cloud-container {
+            position: relative;
+            z-index: 2;
+            margin: 4rem 0;
+            min-height: 500px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 30px;
+            padding: 3rem;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+
+        .company-cloud-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(243, 167, 18, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .company-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .company-tag {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            margin: 0.3rem;
+            background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .company-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .company-tag::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.3), transparent);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .company-tag:hover::before {
+            left: 0;
+        }
+
+        .company-tag:hover::after {
+            width: 120px;
+            height: 120px;
+        }
+
+        .company-tag:hover {
+            transform: translateY(-8px) scale(1.1) rotate(2deg);
+            box-shadow: 0 15px 30px rgba(243, 167, 18, 0.4);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        /* Different sizes and colors for visual hierarchy */
+        .company-tag.tier-1 { 
+            font-size: 2rem; 
+            font-weight: bold;
+            padding: 1.2rem 2.5rem;
+            background: linear-gradient(145deg, rgba(164, 31, 36, 0.3), rgba(164, 31, 36, 0.1));
+            border-color: rgba(164, 31, 36, 0.5);
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        .company-tag.tier-2 { 
+            font-size: 1.5rem; 
+            font-weight: 600;
+            padding: 1rem 2rem;
+            background: linear-gradient(145deg, rgba(243, 167, 18, 0.3), rgba(243, 167, 18, 0.1));
+            border-color: rgba(243, 167, 18, 0.5);
+            animation: float-gentle 6s ease-in-out infinite;
+        }
+        .company-tag.tier-3 { 
+            font-size: 1.2rem; 
+            font-weight: 500;
+            animation: bob 8s ease-in-out infinite;
+        }
+        .company-tag.tier-4 { 
+            font-size: 1rem;
+            animation: sway 10s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(164, 31, 36, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 30px rgba(164, 31, 36, 0.5);
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes float-gentle {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(1deg); }
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: translateX(0px); }
+            50% { transform: translateX(3px); }
+        }
+
+        /* --- Partnership Stats --- */
+        .partnership-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .partnership-stat {
+            text-align: center;
+            padding: 2.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .partnership-stat:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .partnership-stat .stat-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .partnership-stat .stat-label {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+        }
+
+        /* --- Interactive Study Path Tabs --- */
+        #study-path { background: #fff; }
+        
+        .path-tabs { 
+            display: flex; 
+            justify-content: center; 
+            gap: 1rem; 
+            margin-bottom: 4rem; 
+            flex-wrap: wrap; 
+        }
+        
+        .path-tabs button { 
+            background: linear-gradient(145deg, #ffffff, #f0f0f0); 
+            border: 3px solid transparent; 
+            padding: 1.2rem 2.5rem; 
+            font-family: var(--font-family-header); 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            border-radius: 50px; 
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .path-tabs button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+        
+        .path-tabs button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .path-tabs button:hover::before {
+            left: 0;
+        }
+        
+        .path-tabs button.active { 
+            background: var(--gradient-primary); 
+            color: #fff; 
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(164, 31, 36, 0.3);
+        }
+
+        .path-tabs button i {
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .path-tabs button:hover i {
+            transform: rotate(360deg);
+        }
+
+        .path-content-item { 
+            display: none; 
+            background: var(--light-color); 
+            padding: 3rem; 
+            border-radius: 20px; 
+            border: 1px solid #eee;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .path-content-item.active { 
+            display: block; 
+        }
+        
+        .path-content-item h3 { 
+            color: var(--primary-color); 
+            text-align: left; 
+            margin-bottom: 1.5rem; 
+            font-size: 2.2rem; 
+        }
+        
+        .path-content-item .path-description { 
+            margin-bottom: 2.5rem; 
+            font-size: 1.3rem; 
+            line-height: 1.8; 
+            color: #555;
+        }
+        
+        .course-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 3rem; 
+        }
+        
+        .course-category { 
+            background: #fff; 
+            padding: 2.5rem; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .course-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .course-category h4 { 
+            font-size: 1.6rem; 
+            margin-bottom: 2rem; 
+            border-bottom: 3px solid var(--secondary-color); 
+            padding-bottom: 0.8rem; 
+            color: var(--dark-color); 
+        }
+        
+        .course-category ul { 
+            list-style: none; 
+            padding-left: 0; 
+        }
+        
+        .course-category li { 
+            margin-bottom: 1.2rem; 
+            padding-left: 2.5rem; 
+            position: relative; 
+            font-size: 1.05rem; 
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .course-category li:hover {
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+        
+        .course-category li::before { 
+            content: '\f058'; 
+            font-family: 'Font Awesome 6 Free'; 
+            font-weight: 900; 
+            position: absolute; 
+            left: 0; 
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .course-category li:hover::before {
+            color: var(--secondary-color);
+            transform: scale(1.2);
+        }
+
+        /* --- Career Path Visual --- */
+        .career-path-visual {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .career-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .career-step {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--light-color);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .career-step:hover {
+            background: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .career-step::after {
+            content: '→';
+            position: absolute;
+            right: -1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .career-step:last-child::after {
+            display: none;
+        }
+
+        .career-step i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .career-step h5 {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .career-step p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* --- Admissions Section --- */
+        #admissions { 
+            background: var(--dark-color); 
+            color: #fff; 
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #admissions::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(243, 167, 18, 0.05) 20px,
+                rgba(243, 167, 18, 0.05) 40px
+            );
+            animation: slidePattern 25s linear infinite;
+        }
+        
+        #admissions h2 { 
+            color: #fff;
+            position: relative;
+            z-index: 2;
+        }
+        
+        #admissions h2::after { 
+            background: var(--secondary-color); 
+        }
+        
+        .admission-info { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+            gap: 2.5rem; 
+            margin-bottom: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .admission-card { 
+            background: rgba(255,255,255,0.1); 
+            padding: 3rem; 
+            border-radius: 20px; 
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .admission-card:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .admission-card i { 
+            font-size: 3rem; 
+            color: var(--secondary-color); 
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .admission-card:hover i {
+            transform: scale(1.2) rotateY(360deg);
+            color: #fff;
+        }
+        
+        .admission-card h3 { 
+            margin-bottom: 1.5rem; 
+            font-size: 1.8rem;
+        }
+
+        .admission-card p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* --- Application Process Steps --- */
+        .application-process {
+            margin-top: 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .application-process h3 {
+            font-size: 2.2rem;
+            margin-bottom: 3rem;
+            color: var(--secondary-color);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .process-step {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .process-step:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .process-step h4 {
+            margin: 1.5rem 0 1rem;
+            color: var(--secondary-color);
+        }
+
+        .process-step p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* --- Footer --- */
+        .footer { 
+            background: #1a1a1a; 
+            color: #fff; 
+            text-align: center; 
+            padding: 4rem 0; 
+        }
+        
+        .footer-content { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 2rem; 
+            margin-bottom: 2rem; 
+            text-align: left; 
+        }
+        
+        .footer-section h4 { 
+            color: var(--secondary-color); 
+            margin-bottom: 1rem; 
+        }
+        
+        .footer-section a { 
+            color: #ccc; 
+            text-decoration: none; 
+            transition: color 0.3s ease; 
+        }
+        
+        .footer-section a:hover { 
+            color: var(--secondary-color); 
+        }
+
+        /* --- Scroll Progress Indicator --- */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: var(--gradient-primary);
+            z-index: 10000;
+            transition: width 0.1s ease;
+        }
+
+        /* --- Back to Top Button --- */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(164, 31, 36, 0.4);
+            z-index: 1000;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 30px rgba(164, 31, 36, 0.6);
+        }
+
+        /* --- Notification Toast --- */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-left: 4px solid var(--primary-color);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 10000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+
+        /* --- Additional Animations --- */
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .fade-in-up { 
+            animation: fadeInUp 0.8s ease-out; 
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
+            .course-grid { grid-template-columns: 1fr; }
+            .career-steps { grid-template-columns: repeat(2, 1fr); }
+            .activities-content { grid-template-columns: 1fr; }
+            .activities-content img { order: -1; margin-bottom: 2rem; }
+            .curriculum-overview { grid-template-columns: 1fr; }
+            .ylo-timeline { grid-template-columns: repeat(2, 1fr); }
+            .skills-categories { grid-template-columns: 1fr; }
+            .mosaic-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+            .mosaic-item.large { grid-column: span 1; grid-row: span 1; }
+            .mosaic-item.wide { grid-column: span 1; }
+            .mosaic-item.tall { grid-row: span 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .hero p { font-size: 1.2rem; }
+            .navbar { flex-direction: column; align-items: flex-start; }
+            .hamburger { 
+                display: block; 
+                position: absolute; 
+                top: 1.5rem; 
+                right: 1.5rem; 
+            }
+            .nav-links { 
+                display: none; 
+                width: 100%; 
+                flex-direction: column; 
+                text-align: center;
+                background: rgba(255,255,255,0.98);
+                border-radius: 10px;
+                margin-top: 1rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            .nav-links.active { 
+                display: flex; 
+                animation: slideDown 0.3s ease-out;
+            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .career-steps { grid-template-columns: 1fr; }
+            .career-step::after { display: none; }
+            .company-cloud { justify-content: center; }
+            .company-tag.tier-1 { font-size: 1.5rem; }
+            .company-tag.tier-2 { font-size: 1.2rem; }
+            .highlights-grid { grid-template-columns: 1fr; }
+            .ylo-timeline { grid-template-columns: 1fr; }
+            .mosaic-filter { flex-direction: column; align-items: center; }
+        }
+
+        @keyframes slideDown {
+            from { 
+                opacity: 0; 
+                transform: translateY(-20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>กำลังโหลด...</h3>
+            <p>เตรียมพบกับประสบการณ์การเรียนรู้ที่ยอดเยี่ยม</p>
+        </div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-info-circle"></i>
+        <span>ยินดีต้อนรับสู่หลักสูตร CS @ KKU!</span>
+    </div>
+
+    <header>
+        <nav class="navbar" id="navbar">
+            <a href="#" class="logo">CS @ KKU</a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#highlights">จุดเด่น</a></li>
+                <li><a href="#curriculum">หลักสูตร</a></li>
+                <li><a href="#activities">การพัฒนาทักษะ</a></li>
+                <li><a href="#collaboration">ความร่วมมือ</a></li>
+                <li><a href="#study-path">แผนผังอาชีพ</a></li>
+                <li><a href="#admissions">การรับเข้าศึกษา</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="hero-content">
+                <div class="subtitle">หลักสูตรปรับปรุง พ.ศ. 2565</div>
+                <h1>วิทยาศาสตรบัณฑิต<br>วิทยาการคอมพิวเตอร์</h1>
+                <p>มหาวิทยาลัยขอนแก่น | สร้างนักพัฒนานวัตกรรมดิจิทัล ตอบโจทย์โลกอนาคต<br>เรียนรู้แบบ Outcome-Based Education (OBE) เน้นทักษะที่ตลาดงานต้องการ</p>
+                <div>
+                    <a href="#study-path" class="btn btn-primary">ค้นหาเส้นทางอาชีพ</a>
+                    <a href="https://admissions.kku.ac.th/" target="_blank" class="btn btn-secondary">สมัครเรียน</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Banner -->
+        <section class="stats-banner">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item" data-count="128">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">หน่วยกิต</span>
+                    </div>
+                    <div class="stat-item" data-count="4">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">ปีการศึกษา</span>
+                    </div>
+                    <div class="stat-item" data-count="3">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">เส้นทางความเชี่ยวชาญ</span>
+                    </div>
+                    <div class="stat-item" data-count="100">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">% อัตราการได้งานภายใน 3 ปี</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Highlights Section -->
+        <section id="highlights">
+            <div class="container">
+                <h2>ทำไมต้องเรียนที่ CS KKU</h2>
+                <div class="highlights-grid">
+                    <div class="highlight-card fade-in-up">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <h3>หลักสูตร OBE</h3>
+                        <p>เรียนแบบมุ่งเน้นผลลัพธ์ (Outcome-Based Education) จบไปทำอะไรได้ ไม่ใช่แค่เรียนอะไรมา ทำให้บัณฑิตมีทักษะตรงตามที่ตลาดงานต้องการจริง</p>
+                    </div>
+                    <div class="highlight-card fade-in-up">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <h3>ประสบการณ์จริง</h3>
+                        <p>สหกิจศึกษา (Co-operative Education) การฝึกงานกับบริษัทชั้นนำ และการทำโครงงานที่ใช้งานได้จริง สร้างเสริมประสบการณ์ทำงานจริงก่อนเรียนจบ เพิ่มโอกาสได้งานทันที</p>
+                    </div>
+                    <div class="highlight-card fade-in-up">
+                        <i class="fa-solid fa-rocket"></i>
+                        <h3>เนื้อหาทันสมัย</h3>
+                        <p>ครอบคลุมเทคโนโลยีที่เป็นที่ต้องการสูง เช่น AI, Data Science, Cloud Computing, Software Engineering, Quantum Computing และ DevOps พร้อมใช้เครื่องมือและแพลตฟอร์มล่าสุด</p>
+                    </div>
+                    <div class="highlight-card fade-in-up">
+                        <i class="fa-solid fa-users"></i>
+                        <h3>เครือข่ายเข้มแข็ง</h3>
+                        <p>กิจกรรมและเครือข่ายศิษย์เก่าที่ประสบความสำเร็จในหลากหลายวงการ พร้อมให้คำปรึกษาและสร้างคอนเนคชันสำหรับอนาคต</p>
+                    </div>
+                    <div class="highlight-card fade-in-up">
+                        <i class="fa-solid fa-sliders"></i>
+                        <h3>ความยืดหยุ่น & Customizable</h3>
+                        <p>หลักสูตรมีความยืดหยุ่นสูง ผู้เรียนสามารถเลือกวิชาเฉพาะทางตามความสนใจ ปรับแต่งแผนการเรียนตามเป้าหมายอาชีพ และเลือกเรียนข้ามสาขาเพื่อเสริมทักษะเฉพาะตัว</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhanced Curriculum Structure -->
+        <section id="curriculum">
+            <div class="container">
+                <div class="curriculum-showcase">
+                    <h2>โครงสร้างหลักสูตร</h2>
+                    <div class="curriculum-overview">
+                        <div class="curriculum-summary">
+                            <h3>ภาพรวมหลักสูตร</h3>
+                            <p>หลักสูตรวิทยาศาสตรบัณฑิต สาขาวิชาวิทยาการคอมพิวเตอร์ (หลักสูตรปรับปรุง พ.ศ. 2565) รวม <strong>128 หน่วยกิต</strong> ในระยะเวลา <strong>4 ปี</strong></p>
+                            <p>จัดโครงสร้างแบบสมดุลระหว่างความรู้พื้นฐาน ทักษะเฉพาะทาง และการประยุกต์ใช้จริง เพื่อให้บัณฑิตพร้อมเข้าสู่ตลาดแรงงานหรือศึกษาต่อ</p>
+                            <p><strong>เน้น:</strong> การเรียนรู้เชิงปฏิบัติ (Hands-on Learning) และโครงงานจริง (Real-world Projects)</p>
+                        </div>
+                        <div class="curriculum-breakdown">
+                            <div class="subject-group">
+                                <h4>หมวดวิชาศึกษาทั่วไป</h4>
+                                <div class="credits">30</div>
+                                <div class="credits-label">หน่วยกิต</div>
+                                <p>พัฒนาบุคลิกภาพ ทักษะชีวิต และความเป็นพลเมืองที่ดี สร้างความรู้รอบตัวและทักษะการสื่อสาร</p>
+                            </div>
+                            <div class="subject-group">
+                                <h4>วิชาพื้นฐาน</h4>
+                                <div class="credits">25</div>
+                                <div class="credits-label">หน่วยกิต</div>
+                                <p>คณิตศาสตร์ วิทยาศาสตร์ และพื้นฐานคอมพิวเตอร์ เตรียมความพร้อมสำหรับวิชาเฉพาะทาง</p>
+                            </div>
+                            <div class="subject-group">
+                                <h4>วิชาแกน</h4>
+                                <div class="credits">49</div>
+                                <div class="credits-label">หน่วยกิต</div>
+                                <p>หัวใจของวิทยาการคอมพิวเตอร์ที่ทุกคนต้องเรียน ครอบคลุมทุกหลักการสำคัญ</p>
+                            </div>
+                            <div class="subject-group">
+                                <h4>วิชาเลือกเฉพาะ</h4>
+                                <div class="credits">18</div>
+                                <div class="credits-label">หน่วยกิต</div>
+                                <p>เลือกความเชี่ยวชาญตามแนวทางอาชีพที่สนใจ มี 3 เส้นทางหลัก</p>
+                            </div>
+                            <div class="subject-group">
+                                <h4>วิชาเลือกเสรี</h4>
+                                <div class="credits">6</div>
+                                <div class="credits-label">หน่วยกิต</div>
+                                <p>เสริมทักษะเพิ่มเติมตามความสนใจ เปิดโลกทัศน์ให้กว้างขึ้น</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Enhanced YLO Progress Timeline -->
+                    <div class="ylo-progress">
+                        <h3>Year Learning Outcomes (YLO) - เส้นทางการเรียนรู้ตลอด 4 ปี</h3>
+                        <div class="ylo-timeline">
+                            <div class="ylo-year">
+                                <div class="ylo-year-number">1</div>
+                                <div class="ylo-year-title">ชั้นปีที่ 1</div>
+                                <div class="ylo-year-subtitle">Foundation</div>
+                                <div class="ylo-year-description">
+                                    ปูพื้นฐานการเขียนโปรแกรม ตรรกะ และคณิตศาสตร์ที่จำเป็นสำหรับคอมพิวเตอร์ ทำความเข้าใจภาพรวมของสายอาชีพและจรรยาบรรณ เริ่มต้นสร้างกรอบความคิดทางเทคนิค
+                                </div>
+                            </div>
+                            <div class="ylo-year">
+                                <div class="ylo-year-number">2</div>
+                                <div class="ylo-year-title">ชั้นปีที่ 2</div>
+                                <div class="ylo-year-subtitle">Core Skills</div>
+                                <div class="ylo-year-description">
+                                    เรียนรู้โครงสร้างข้อมูล, ฐานข้อมูล, เครือข่าย และการออกแบบประสบการณ์ผู้ใช้ (UX) เริ่มวิเคราะห์และแก้ปัญหาที่ซับซ้อนขึ้น พัฒนาทักษะการทำงานเป็นทีม
+                                </div>
+                            </div>
+                            <div class="ylo-year">
+                                <div class="ylo-year-number">3</div>
+                                <div class="ylo-year-title">ชั้นปีที่ 3</div>
+                                <div class="ylo-year-subtitle">Specialization</div>
+                                <div class="ylo-year-description">
+                                    เจาะลึกวิชาเฉพาะทางที่สนใจ เช่น AI, Software Engineering, System Design และเริ่มเรียนรู้การทำงานวิจัย เตรียมพร้อมสู่การฝึกงาน สร้าง Portfolio ส่วนตัว
+                                </div>
+                            </div>
+                            <div class="ylo-year">
+                                <div class="ylo-year-number">4</div>
+                                <div class="ylo-year-title">ชั้นปีที่ 4</div>
+                                <div class="ylo-year-subtitle">Professional</div>
+                                <div class="ylo-year-description">
+                                    ประยุกต์ใช้ความรู้ทั้งหมดผ่านโครงงาน (Project) หรือสหกิจศึกษา (Co-op) สร้างผลงานที่ใช้งานได้จริง พร้อมนำเสนออย่างมืออาชีพ เตรียมความพร้อมสู่ตลาดแรงงาน
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhanced Activities Section with Skills Focus -->
+        <section id="activities">
+            <div class="container">
+                <h2>การพัฒนาทักษะเพื่อเตรียมความพร้อม</h2>
+                
+                <div class="activities-intro">
+                    <h3>การเรียนรู้ที่ครอบคลุมทั้ง Hard Skills และ Soft Skills</h3>
+                    <p>หลักสูตรมุ่งเน้นการพัฒนานักศึกษาอย่างรอบด้าน ทั้งความรู้ความสามารถทางเทคนิค (Hard Skills) และทักษะการทำงานและชีวิต (Soft Skills) เพื่อสร้างบัณฑิตที่พร้อมสำหรับโลกการทำงานยุคใหม่</p>
+                </div>
+
+                <!-- Skills Categories with Images -->
+                <div class="skills-categories">
+                    <!-- Hard Skills -->
+                    <div class="skills-category hard-skills">
+                        <div class="skills-category-header">
+                            <div class="skills-category-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="skills-category-title">Hard Skills - ทักษะเทคนิค</div>
+                        </div>
+                        <img src="https://drive.google.com/thumbnail?id=1cEFDl9miioYg9O95ABZ_3yPimadFYluy&sz=w1000" alt="Hard Skills - การพัฒนาทักษะเทคนิค" class="skills-category-image">
+                        <div class="skills-category-content">
+                            <ul class="skills-list">
+                                <li>
+                                    <i class="fas fa-laptop-code skills-list-icon"></i>
+                                    <div class="skills-list-content">
+                                        <h4>Programming & Development</h4>
+                                        <p>เขียนโปรแกรมหลากหลายภาษา, การใช้ Framework และเครื่องมือพัฒนาสมัยใหม่ Git, Docker, Cloud Platforms</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-database skills-list-icon"></i>
+                                    <div class="skills-list-content">
+                                        <h4>Data & AI Skills</h4>
+                                        <p>การจัดการฐานข้อมูล, Machine Learning, Data Analysis และการทำงานกับ Big Data</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-shield-alt skills-list-icon"></i>
+                                    <div class="skills-list-content">
+                                        <h4>System & Security</h4>
+                                        <p>การออกแบบระบบ, Network Administration และ Cybersecurity เพื่อสร้างระบบที่ปลอดภัยและมีประสิทธิภาพ</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Soft Skills -->
+                    <div class="skills-category soft-skills">
+                        <div class="skills-category-header">
+                            <div class="skills-category-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="skills-category-title">Soft Skills - ทักษะชีวิต</div>
+                        </div>
+                        <img src="https://drive.google.com/thumbnail?id=1Ma9dCdxxKXdRW15cLRhnnD4syoin3fBL&sz=w1000" alt="Soft Skills - การพัฒนาทักษะชีวิต" class="skills-category-image">
+                        <div class="skills-category-content">
+                            <ul class="skills-list">
+                                <li>
+                                    <i class="fas fa-comments skills-list-icon"></i>
+                                    <div class="skills-list-content">
+                                        <h4>Communication & Presentation</h4>
+                                        <p>การสื่อสารภาษาไทยและอังกฤษ, การนำเสนอผลงาน และการเขียนเอกสารทางเทคนิค</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-handshake skills-list-icon"></i>
+                                    <div class="skills-list-content">
+                                        <h4>Teamwork & Leadership</h4>
+                                        <p>การทำงานเป็นทีม, การบริหารโครงงาน และภาวะผู้นำในการพัฒนาซอฟต์แวร์</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-lightbulb skills-list-icon"></i>
+                                    <div class="skills-list-content">
+                                        <h4>Critical Thinking & Problem Solving</h4>
+                                        <p>การวิเคราะห์ปัญหา, การคิดเชิงระบบ และการหาแนวทางแก้ไขที่สร้างสรรค์</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Mosaic Gallery -->
+                <div class="mosaic-gallery">
+                    <div class="mosaic-header">
+                        <h3><i class="fas fa-images"></i> ภาพกิจกรรมและประสบการณ์การเรียนรู้</h3>
+                        <p>ชมภาพบรรยากาศการเรียนรู้และกิจกรรมที่หลากหลายของนักศึกษา CS @ KKU</p>
+                    </div>
+                    
+                    <div class="mosaic-filter">
+                        <button class="filter-btn active" data-filter="all">ทั้งหมด</button>
+                        <button class="filter-btn" data-filter="workshop">Workshop</button>
+                        <button class="filter-btn" data-filter="award">รางวัล</button>
+                        <button class="filter-btn" data-filter="culture">วัฒนธรรม</button>
+                        <button class="filter-btn" data-filter="academic">วิชาการ</button>
+                        <button class="filter-btn" data-filter="coop">สหกิจศึกษา</button>
+                    </div>
+
+                    <div class="mosaic-grid" id="mosaic-grid">
+                        <!-- Workshop Activities -->
+                        <div class="mosaic-item large workshop" style="animation-delay: 0.1s">
+                            <img src="https://drive.google.com/thumbnail?id=18X9MfOMOBGR9Pp-cpxqbGC-DFAwkhqfh&sz=w800" alt="Workshop Activity">
+                            <div class="mosaic-overlay">
+                                <h4>Tech Workshop</h4>
+                                <span class="activity-type">Workshop</span>
+                            </div>
+                        </div>
+
+                        <!-- Awards -->
+                        <div class="mosaic-item award" style="animation-delay: 0.2s">
+                            <img src="https://drive.google.com/thumbnail?id=1mptCHC2rRKLI_6ibUdN8BXoGAoMP6M-5&sz=w400" alt="Student Award">
+                            <div class="mosaic-overlay">
+                                <h4>นักศึกษาได้รับรางวัล</h4>
+                                <span class="activity-type">Award</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item wide academic" style="animation-delay: 0.3s">
+                            <img src="https://drive.google.com/thumbnail?id=1WQbpl-UWQvmK5K0WXfgBi3ApNu5CTdQf&sz=w600" alt="Academic Project">
+                            <div class="mosaic-overlay">
+                                <h4>โครงงานวิจัย</h4>
+                                <span class="activity-type">Academic</span>
+                            </div>
+                        </div>
+
+                        <!-- Culture Activities -->
+                        <div class="mosaic-item culture" style="animation-delay: 0.4s">
+                            <img src="https://drive.google.com/thumbnail?id=1Vc7AW5PWRdrjf9fm6qIRXEgTmEs6I4Qf&sz=w400" alt="Cultural Activity">
+                            <div class="mosaic-overlay">
+                                <h4>กิจกรรมสร้างสรรค์</h4>
+                                <span class="activity-type">Culture</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item tall workshop" style="animation-delay: 0.5s">
+                            <img src="https://drive.google.com/thumbnail?id=1kyIiQblz-cl5bIs0_ZIpTBAz3tkj0OQV&sz=w400" alt="Workshop Lab">
+                            <div class="mosaic-overlay">
+                                <h4>ปฏิบัติการคอมพิวเตอร์</h4>
+                                <span class="activity-type">Workshop</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item award" style="animation-delay: 0.6s">
+                            <img src="https://drive.google.com/thumbnail?id=1YTk2pT6J_NS3pBfik28G6OWn2HpOvQXd&sz=w400" alt="Competition Award">
+                            <div class="mosaic-overlay">
+                                <h4>รางวัลการแข่งขัน</h4>
+                                <span class="activity-type">Award</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item wide culture" style="animation-delay: 0.7s">
+                            <img src="https://drive.google.com/thumbnail?id=1eXR2Y94ZkFs4zTaI9DZ3CJCrOGxvaJ4V&sz=w600" alt="Programming Contest">
+                            <div class="mosaic-overlay">
+                                <h4>การแข่งขันโปรแกรมมิ่ง</h4>
+                                <span class="activity-type">Culture</span>
+                            </div>
+                        </div>
+
+                        <!-- Workshop Activities -->
+                        <div class="mosaic-item workshop" style="animation-delay: 0.8s">
+                            <img src="https://drive.google.com/thumbnail?id=1kyIiQblz-cl5bIs0_ZIpTBAz3tkj0OQV&sz=w400" alt="Technical Workshop">
+                            <div class="mosaic-overlay">
+                                <h4>เทคนิค Workshop</h4>
+                                <span class="activity-type">Workshop</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item academic" style="animation-delay: 0.9s">
+                            <img src="https://drive.google.com/thumbnail?id=1TaISuciVT2P73JL9IZXhwTR8r6ny4c1f&sz=w400" alt="Academic Presentation">
+                            <div class="mosaic-overlay">
+                                <h4>นำเสนอวิชาการ</h4>
+                                <span class="activity-type">Academic</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item large culture" style="animation-delay: 1.0s">
+                            <img src="https://drive.google.com/thumbnail?id=1Lchrd3xMyfuU-SoPmM-sdPkUD3AWxc8G&sz=w800" alt="Student Life">
+                            <div class="mosaic-overlay">
+                                <h4>ชีวิตนักศึกษา</h4>
+                                <span class="activity-type">Culture</span>
+                            </div>
+                        </div>
+
+                        <!-- Co-op Education -->
+                        <div class="mosaic-item wide coop" style="animation-delay: 1.1s">
+                            <img src="https://drive.google.com/thumbnail?id=190dKtrhoFA2dLEWaBl7GUiLXhbV7n4Gu&sz=w600" alt="Co-op Education">
+                            <div class="mosaic-overlay">
+                                <h4>สหกิจศึกษา</h4>
+                                <span class="activity-type">Co-op</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item workshop" style="animation-delay: 1.2s">
+                            <img src="https://drive.google.com/thumbnail?id=17bRVarQwM79AS6-7q-mJ9BkoJdhl_0nO&sz=w400" alt="Coding Workshop">
+                            <div class="mosaic-overlay">
+                                <h4>Coding Workshop</h4>
+                                <span class="activity-type">Workshop</span>
+                            </div>
+                        </div>
+
+                        <!-- More Culture Activities -->
+                        <div class="mosaic-item culture" style="animation-delay: 1.3s">
+                            <img src="https://drive.google.com/thumbnail?id=12ioxVOO96cLGXXPKNoOomJfFhRAaKf4-&sz=w400" alt="Creative Activity">
+                            <div class="mosaic-overlay">
+                                <h4>กิจกรรมสร้างสรรค์</h4>
+                                <span class="activity-type">Culture</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item tall academic" style="animation-delay: 1.4s">
+                            <img src="https://drive.google.com/thumbnail?id=1UZsaf2zFsQWZ9fRCsKacHgxFF2Gx4sc8&sz=w400" alt="Research Project">
+                            <div class="mosaic-overlay">
+                                <h4>โครงการวิจัย</h4>
+                                <span class="activity-type">Academic</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item award" style="animation-delay: 1.5s">
+                            <img src="https://drive.google.com/thumbnail?id=17DosICtDV2uDUIjXYdIx5H-eWoJwtaGr&sz=w400" alt="Excellence Award">
+                            <div class="mosaic-overlay">
+                                <h4>รางวัลความเป็นเลิศ</h4>
+                                <span class="activity-type">Award</span>
+                            </div>
+                        </div>
+
+                        <div class="mosaic-item wide culture" style="animation-delay: 1.6s">
+                            <img src="https://drive.google.com/thumbnail?id=1BzEvLMBfhOKfP3cCqczkpxZQk6togI8h&sz=w600" alt="Team Building">
+                            <div class="mosaic-overlay">
+                                <h4>กิจกรรมทีมเวิร์ก</h4>
+                                <span class="activity-type">Culture</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="activities-content">
+                    <div class="activities-text">
+                        <h3>กิจกรรมเสริมสร้างประสบการณ์</h3>
+                        <p>นอกเหนือจากการเรียนในห้องเรียน เรายังมีกิจกรรมหลากหลายที่ช่วยพัฒนาทักษะและประสบการณ์ของนักศึกษา เพื่อเตรียมความพร้อมสู่โลกการทำงานอย่างเต็มตัว</p>
+                        <ul class="activities-list">
+                            <li>
+                                <i class="fa-solid fa-building-columns"></i>
+                                <div><strong>ศึกษาดูงาน & Company Visit:</strong> เยี่ยมชมบริษัทเทคโนโลยีชั้นนำ เรียนรู้วัฒนธรรมการทำงาน และเทรนด์เทคโนโลยีใหม่ๆ</div>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-microphone-lines"></i>
+                                <div><strong>Tech Talk & Workshop:</strong> ฟังบรรยายจากผู้เชี่ยวชาญ อัปเดตความรู้ใหม่ และฝึกทักษะเฉพาะด้าน</div>
+                            </li>
+                            <li>
+                                <i class="fa-solid fa-trophy"></i>
+                                <div><strong>การแข่งขันและ Hackathon:</strong> ทดสอบทักษะและสร้างผลงานในเวลาจำกัด เสริมสร้าง Portfolio</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="activities-image">
+                        <img src="https://drive.google.com/thumbnail?id=1EaFUUtqxJKCAvk3X6eFD2YdABeTE9VD7&sz=w1000" alt="ภาพกิจกรรมนักศึกษา CS KKU">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhanced Industry Collaboration -->
+        <section id="collaboration">
+            <div class="container">
+                <div class="collaboration-content">
+                    <h2>ความร่วมมือกับภาคอุตสาหกรรม</h2>
+                    <h3>เครือข่ายพันธมิตรมากกว่า 200+ องค์กร</h3>
+                    <p>หลักสูตรมีความร่วมมือกับองค์กรชั้นนำทั้งภาครัฐและเอกชน เพื่อให้นักศึกษาได้รับประสบการณ์ที่หลากหลายและตรงกับความต้องการของตลาดงาน ตั้งแต่บริษัทเทคโนโลยีระดับโลก ไปจนถึงสตาร์ทอัพท้องถิ่น</p>
+                </div>
+
+                <!-- Enhanced Animated Company Word Cloud -->
+                <div class="company-cloud-container">
+                    <div class="company-cloud">
+                        <!-- Tier 1: Major Corporations -->
+                        <span class="company-tag tier-1">SCB/SCB TechX</span>
+ 			<span class="company-tag tier-1">CP Group</span>
+                        <span class="company-tag tier-1">INET</span>
+                        <span class="company-tag tier-1">Exxon Mobile</span>
+                        <span class="company-tag tier-1">BBL</span>
+                        <span class="company-tag tier-1">ธนาคารกรุงศรี</span>
+                        <span class="company-tag tier-1">Microsoft</span>
+			<span class="company-tag tier-1">Huawei</span>
+			<span class="company-tag tier-1">TCC Technology</span>
+                        
+                        <!-- Tier 2: Large Companies -->
+                        <span class="company-tag tier-2">True Corporation</span>
+                        <span class="company-tag tier-2">TOT</span>
+                        <span class="company-tag tier-2">Toyota</span>
+                        <span class="company-tag tier-2">การไฟฟ้าส่วนภูมิภาค</span>
+                        <span class="company-tag tier-2">กสท โทรคมนาคม</span>
+                        <span class="company-tag tier-2">น่าอยู่ คอร์ปอเรชั่น</span>
+ 			<span class="company-tag tier-2">WOXA</span>
+ 			<span class="company-tag tier-2">Alphametrics</span>
+			<span class="company-tag tier-2">GOFIVE</span>
+    
+                        
+                        <!-- Tier 3: Medium Companies -->
+                        <span class="company-tag tier-3">ขอนแก่น ซอฟต์เทค</span>
+                        <span class="company-tag tier-3">Digic Technology</span>
+                        <span class="company-tag tier-3">Think Technology</span>
+                        <span class="company-tag tier-3">iBitz</span>
+                        <span class="company-tag tier-3">GABLE</span>
+                        <span class="company-tag tier-3">Data Science Service</span>
+                        <span class="company-tag tier-3">BigData Agency</span>
+                        <span class="company-tag tier-3">InCloud</span>
+                        <span class="company-tag tier-3">Focus Arena</span>
+                        <span class="company-tag tier-3">Quest EdTech</span>
+                        
+                        <!-- Tier 4: Smaller Companies -->
+                        <span class="company-tag tier-4">Wynsoft Solution</span>
+                        <span class="company-tag tier-4">Jump Space</span>
+                        <span class="company-tag tier-4">B Project</span>
+                        <span class="company-tag tier-4">TT Software Solutions</span>
+                        <span class="company-tag tier-4">Grid Consultant</span>
+                        <span class="company-tag tier-4">Miracle Life Coach</span>
+                        <span class="company-tag tier-4">KP Life IT</span>
+                        <span class="company-tag tier-4">Pacific Corporation</span>
+                        <span class="company-tag tier-4">SPK Sound Systems</span>
+                        <span class="company-tag tier-4">Eiloy Tech Group</span>
+                        <span class="company-tag tier-4">OneGeoSurvey</span>
+                        <span class="company-tag tier-4">Extra PM</span>
+                        <span class="company-tag tier-4">Diamond Brain Computer</span>
+                        <span class="company-tag tier-4">Specialty Tech Corporation</span>
+                        <span class="company-tag tier-4">TBL Logistics Research</span>
+                        <span class="company-tag tier-4">Sunny Syrup Studio</span>
+                        <span class="company-tag tier-4">Cloud NC</span>
+                        <span class="company-tag tier-4">Finn X</span>
+                        <span class="company-tag tier-4">GoSoft Thailand</span>
+                        <span class="company-tag tier-4">Digital Focus</span>
+                        <span class="company-tag tier-4">OnDemand Education</span>
+                        <span class="company-tag tier-4">TEAM Consulting</span>
+                        <span class="company-tag tier-4">Tetra Corporation</span>
+                        <span class="company-tag tier-4">Intellect Network Web</span>
+                        <span class="company-tag tier-4">Numerix Hub Thailand</span>
+                        <span class="company-tag tier-4">SUPERNAP Thailand</span>
+                        <span class="company-tag tier-4">MyOrder Marketing</span>
+                        <span class="company-tag tier-4">Doodee Decorate</span>
+                        <span class="company-tag tier-4">Thai Data Enterprise</span>
+                        <span class="company-tag tier-4">Freewill Solutions</span>
+                        <span class="company-tag tier-4">Triple T Broadband</span>
+                        <span class="company-tag tier-4">Bangkok Web Solution</span>
+                        <span class="company-tag tier-4">Softchain</span>
+                        <span class="company-tag tier-4">บาทสมาร์ท</span>
+                        <span class="company-tag tier-4">Octagon Interactive</span>
+                        <span class="company-tag tier-4">TT Network Integration</span>
+                        <span class="company-tag tier-4">DS</span>
+                        <span class="company-tag tier-4">Huben</span>
+                        <span class="company-tag tier-4">Isan Studio</span>
+                        <span class="company-tag tier-4">สารสนเทศชุมชน</span>
+                        <span class="company-tag tier-4">Packcon</span>
+                        <span class="company-tag tier-4">BG Technology</span>
+                        <span class="company-tag tier-4">C.S.I. Group</span>
+                        <span class="company-tag tier-4">Metro Systems</span>
+                    </div>
+                </div>
+
+                <!-- Partnership Statistics -->
+                <div class="partnership-stats">
+                    <div class="partnership-stat">
+                        <span class="stat-number">200 + </span>
+                        <span class="stat-label">บริษัทพันธมิตร (ทีเคยรับนักศึกษาเข้าฝึกงาน)</span>
+                    </div>
+                    <div class="partnership-stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">อัตราการได้งาน (ภายใน 3 ปี) </span>
+                    </div>
+             
+                </div>
+            </div>
+        </section>
+
+        <!-- Study Path Section -->
+        <section id="study-path">
+            <div class="container">
+                <h2>แผนผังเส้นทางอาชีพ</h2>
+                <div class="path-tabs">
+                    <button class="path-tab-button active" data-path="ai">
+                        <i class="fa-solid fa-brain"></i> AI / Data Science
+                    </button>
+                    <button class="path-tab-button" data-path="software">
+                        <i class="fa-solid fa-code"></i> Software / Web / Mobile
+                    </button>
+                    <button class="path-tab-button" data-path="system">
+                        <i class="fa-solid fa-server"></i> System / Network / Security
+                    </button>
+                </div>
+                <div class="path-content">
+                    <!-- AI / Data Science Path -->
+                    <div id="path-ai" class="path-content-item active">
+                        <h3>เส้นทาง: นักวิทยาศาสตร์ข้อมูล / วิศวกรปัญญาประดิษฐ์</h3>
+                        <p class="path-description">สำหรับผู้ที่หลงใหลในการนำข้อมูลมาสร้างมูลค่า สร้างแบบจำลองอัจฉริยะเพื่อทำนายอนาคต และพัฒนาระบบ AI ที่ช่วยเหลือมนุษย์ในงานที่ซับซ้อน ตั้งแต่การวิเคราะห์ข้อมูลธุรกิจ ไปจนถึงการพัฒนา Chatbot และระบบแนะนำสินค้า</p>
+                        
+                        <div class="career-path-visual">
+                            <h4><i class="fas fa-road"></i> เส้นทางสู่ความเป็นมืออาชีพ</h4>
+                            <div class="career-steps">
+                                <div class="career-step">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <h5>เรียนพื้นฐาน</h5>
+                                    <p>Python, Statistics, Mathematics</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-chart-line"></i>
+                                    <h5>ฝึกทักษะ</h5>
+                                    <p>Data Analysis, Machine Learning</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-project-diagram"></i>
+                                    <h5>สร้างโปรเจค</h5>
+                                    <p>Portfolio Projects, Kaggle</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-briefcase"></i>
+                                    <h5>เข้าสู่อาชีพ</h5>
+                                    <p>Data Scientist, AI Engineer</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-grid">
+                            <div class="course-category">
+                                <h4><i class="fa-solid fa-star"></i> วิชาเลือกหลัก (แนะนำ)</h4>
+                                <ul>
+                                    <li>CP 352 101 วิทยาการข้อมูลเบื้องต้น</li>
+                                    <li>CP 353 101 วิศวกรรมข้อมูล</li>
+                                    <li>CP 353 102 เครื่องจักรเรียนรู้เบื้องต้น</li>
+                                    <li>CP 353 103 การวิเคราะห์และการประยุกต์ข้อมูล</li>
+                                    <li>CP 353 108 โครงข่ายประสาทและการเรียนรู้เชิงลึก</li>
+                                    <li>CP 353 109 การประมวลผลภาษาธรรมชาติ</li>
+                                    <li>CP 352 102 การประมวลผลภาพดิจิทัล</li>
+                                </ul>
+                            </div>
+                            <div class="course-category">
+                                <h4><i class="fa-solid fa-plus"></i> วิชาเสริมทักษะ</h4>
+                                <ul>
+                                    <li>CP 351 101 วิทยาการคำนวณ</li>
+                                    <li>CP 353 106 การค้นคืนสารสนเทศ</li>
+                                    <li>CP 353 107 การจัดการความรู้</li>
+                                    <li>CP 353 110 ปฏิบัติการปัญญาประดิษฐ์</li>
+                                    <li>CP 353 111 การเขียนโปรแกรมคอมพิวเตอร์ควอนตัม</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Software Development Path -->
+                    <div id="path-software" class="path-content-item">
+                        <h3>เส้นทาง: นักพัฒนาซอฟต์แวร์ / เว็บ / โมบาย</h3>
+                        <p class="path-description">สร้างสรรค์แอปพลิเคชันและเว็บไซต์ที่ตอบโจทย์ผู้คนนับล้าน เรียนรู้กระบวนการพัฒนาซอฟต์แวร์ที่ทันสมัยและมีคุณภาพ ตั้งแต่การออกแบบ UI/UX ไปจนถึงการ Deploy บน Cloud และการทำ DevOps</p>
+                        
+                        <div class="career-path-visual">
+                            <h4><i class="fas fa-road"></i> เส้นทางสู่ความเป็นมืออาชีพ</h4>
+                            <div class="career-steps">
+                                <div class="career-step">
+                                    <i class="fas fa-code"></i>
+                                    <h5>เรียนพื้นฐาน</h5>
+                                    <p>HTML, CSS, JavaScript, Programming</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-tools"></i>
+                                    <h5>ฝึก Framework</h5>
+                                    <p>React, Node.js, Mobile App</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-rocket"></i>
+                                    <h5>สร้างโปรเจค</h5>
+                                    <p>Web Apps, Mobile Apps</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-user-tie"></i>
+                                    <h5>เข้าสู่อาชีพ</h5>
+                                    <p>Full-Stack Developer, Mobile Dev</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-grid">
+                            <div class="course-category">
+                                <h4><i class="fa-solid fa-star"></i> วิชาเลือกหลัก (แนะนำ)</h4>
+                                <ul>
+                                    <li>CP 352 201 เทคโนโลยีการออกแบบเว็บ</li>
+                                    <li>CP 352 202 การเขียนโปรแกรมสำหรับโมบายแอปพลิเคชัน</li>
+                                    <li>CP 352 204 การวิเคราะห์และออกแบบระบบ</li>
+                                    <li>CP 353 201 การประกันคุณภาพซอฟต์แวร์</li>
+                                    <li>CP 353 202 การพัฒนาโปรแกรมประยุกต์สำหรับองค์กร</li>
+                                    <li>CP 353 204 การพัฒนาโปรแกรมประยุกต์บนเว็บ</li>
+                                </ul>
+                            </div>
+                            <div class="course-category">
+                                <h4><i class="fa-solid fa-plus"></i> วิชาเสริมทักษะ</h4>
+                                <ul>
+                                    <li>CP 351 201 คอมพิวเตอร์แอนิเมชัน</li>
+                                    <li>CP 352 203 การพัฒนาเกมคอมพิวเตอร์</li>
+                                    <li>CP 353 203 การพัฒนาโปรแกรมประยุกต์เสมือนจริง</li>
+                                    <li>CP 363 103 การเป็นผู้ประกอบการเทคโนโลยีสารสนเทศ</li>
+                                    <li>CP 353 306 วิศวกรรม DevOps</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System/Network/Security Path -->
+                    <div id="path-system" class="path-content-item">
+                        <h3>เส้นทาง: วิศวกรระบบ / เครือข่าย / ความปลอดภัย</h3>
+                        <p class="path-description">ดูแลและออกแบบโครงสร้างพื้นฐานดิจิทัลที่แข็งแกร่งและปลอดภัย ตั้งแต่ระบบเครือข่าย Cloud Infrastructure ไปจนถึงการป้องกันภัยคุกคามทางไซเบอร์ และการพัฒนาระบบ IoT ที่เชื่อมต่อทุกสิ่งเข้าด้วยกัน</p>
+                        
+                        <div class="career-path-visual">
+                            <h4><i class="fas fa-road"></i> เส้นทางสู่ความเป็นมืออาชีพ</h4>
+                            <div class="career-steps">
+                                <div class="career-step">
+                                    <i class="fas fa-network-wired"></i>
+                                    <h5>เรียนพื้นฐาน</h5>
+                                    <p>Network, OS, Security Basics</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <h5>ฝึกทักษะ</h5>
+                                    <p>System Security, Cloud, DevOps</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-server"></i>
+                                    <h5>สร้างโปรเจค</h5>
+                                    <p>Network Lab, Security Projects</p>
+                                </div>
+                                <div class="career-step">
+                                    <i class="fas fa-user-shield"></i>
+                                    <h5>เข้าสู่อาชีพ</h5>
+                                    <p>System Admin, Security Analyst</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course-grid">
+                            <div class="course-category">
+                                <h4><i class="fa-solid fa-star"></i> วิชาเลือกหลัก (แนะนำ)</h4>
+                                <ul>
+                                    <li>CP 352 301 การเขียนโปรแกรมสคริปต์</li>
+                                    <li>CP 352 302 เครือข่ายสื่อสารไร้สายและเคลื่อนที่</li>
+                                    <li>CP 353 301 การเชื่อมต่ออินเทอร์เน็ต</li>
+                                    <li>CP 353 302 ความมั่นคงสารสนเทศและไซเบอร์</li>
+                                    <li>CP 353 303 วิทยาการเข้ารหัสลับและความมั่นคงระบบเครือข่าย</li>
+                                    <li>CP 353 305 อินเทอร์เน็ตของสรรพสิ่ง (IoT)</li>
+                                </ul>
+                            </div>
+                            <div class="course-category">
+                                <h4><i class="fa-solid fa-plus"></i> วิชาเสริมทักษะ</h4>
+                                <ul>
+                                    <li>CP 353 306 วิศวกรรม DevOps</li>
+                                    <li>CP 362 301 ตรรกะดิจิทัลและระบบฝังตัว</li>
+                                    <li>CP 363 305 การประมวลผลแบบกลุ่มเมฆและการประยุกต์</li>
+                                    <li>CP 353 304 การวางระบบอัตโนมัติแพลตฟอร์มสมาร์ต</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Admissions Section -->
+        <section id="admissions">
+            <div class="container">
+                <h2>การรับเข้าศึกษา</h2>
+                <div class="admission-info">
+                    <div class="admission-card">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <h3>รอบการสมัคร</h3>
+                        <p>รับสมัครหลายรอบตลอดปี ติดตามข่าวสารและกำหนดการได้ที่เว็บไซต์สำนักบริหารและพัฒนาวิชาการ มหาวิทยาลัยขอนแก่น</p>
+                    </div>
+                    <div class="admission-card">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <h3>คุณสมบัติ</h3>
+                        <p>สำเร็จการศึกษาระดับมัธยมศึกษาตอนปลาย วิทย์-คณิต หรือเทียบเท่า มีพื้นฐานคณิตศาสตร์และวิทยาศาสตร์ที่ดี</p>
+                    </div>
+                    <div class="admission-card">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        <h3>ทุนการศึกษา</h3>
+                        <p>มีทุนการศึกษาหลายประเภท ทั้งทุนเรียนดี ทุนขาดแคลนทุนทรัพย์ และทุนพิเศษต่างๆ รองรับนักศึกษาทุกสถานะ</p>
+                    </div>
+                </div>
+
+                <div class="application-process">
+                    <h3><i class="fas fa-clipboard-list"></i> ขั้นตอนการสมัคร</h3>
+                    <div class="process-steps">
+                        <div class="process-step">
+                            <div class="step-number">1</div>
+                            <h4>เตรียมเอกสาร</h4>
+                            <p>เตรียมเอกสารการสมัคร ใบ ปพ.1 และเอกสารประกอบต่างๆ</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">2</div>
+                            <h4>สมัครออนไลน์</h4>
+                            <p>สมัครผ่านระบบออนไลน์ของมหาวิทยาลัยขอนแก่นตามรอบที่ต้องการ</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">3</div>
+                            <h4>ชำระค่าสมัคร</h4>
+                            <p>ชำระค่าธรรมเนียมการสมัครตามที่กำหนดภายในเวลาที่กำหนด</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">4</div>
+                            <h4>รอผลประกาศ</h4>
+                            <p>รอรับผลการประกาศผ่านเว็บไซต์และทำการยืนยันสิทธิ์</p>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-number">5</div>
+                            <h4>ลงทะเบียน</h4>
+                            <p>ลงทะเบียนเป็นนักศึกษาและเข้าร่วมปฐมนิเทศนักศึกษาใหม่</p>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="https://admissions.kku.ac.th/" target="_blank" class="btn btn-primary" style="margin-top: 3rem; padding: 1.5rem 3rem; font-size: 1.4rem; position: relative; z-index: 3;">
+                    <i class="fa-solid fa-external-link-alt"></i> เว็บไซต์การรับสมัครอย่างเป็นทางการ
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>ติดต่อเรา</h4>
+                    <p><i class="fa-solid fa-location-dot"></i> วิทยาลัยการคอมพิวเตอร์<br>มหาวิทยาลัยขอนแก่น อำเภอเมือง จังหวัดขอนแก่น 40002</p>
+                    <p><i class="fa-solid fa-phone"></i> โทร:  043-009700 ต่อ 44456, 44459, 44457 </p>
+                    <p><i class="fa-solid fa-envelope"></i> อีเมล: computing.kku@kku.ac.th</p>
+                </div>
+                <div class="footer-section">
+                    <h4>ลิงก์ที่เกี่ยวข้อง</h4>
+                    <p><a href="https://www.kku.ac.th">มหาวิทยาลัยขอนแก่น</a></p>
+                    <p><a href="https://computing.kku.ac.th">วิทยาลัยการคอมพิวเตอร์</a></p>
+                    <p><a href="https://reg.kku.ac.th">กิจการนักศึกษา</a></p>
+                    <p><a href="https://admissions.kku.ac.th">การรับเข้าศึกษา</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>ติดตามเรา</h4>
+                    <p>
+                        <a href="https://www.facebook.com/computing.kku"><i class="fab fa-facebook"></i> Facebook</a><br>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a><br>
+                        <a href="#"><i class="fab fa-youtube"></i> YouTube</a><br>
+                        <a href="#"><i class="fab fa-line"></i> LINE Official</a>
+                    </p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333;">
+                <h3 style="color: var(--secondary-color); margin-bottom: 1rem;">วิทยาลัยการคอมพิวเตอร์ มหาวิทยาลัยขอนแก่น</h3>
+                <p>&copy; 2024 College of Computing, Khon Kaen University. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // --- Loading Screen ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    showToast();
+                }, 500);
+            }, 2000);
+        });
+
+        // --- Toast Notification ---
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // --- Scroll Progress ---
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.getElementById('scroll-progress');
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (scrollTop / scrollHeight) * 100;
+            scrollProgress.style.width = scrolled + '%';
+
+            // Navbar scroll effect
+            const navbar = document.getElementById('navbar');
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Back to top button
+            const backToTop = document.getElementById('back-to-top');
+            if (scrollTop > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // --- Back to Top ---
+        document.getElementById('back-to-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- Counter Animation ---
+        function animateCounter(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            
+            function updateCounter() {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = target;
+                } else {
+                    element.textContent = Math.floor(start);
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+            updateCounter();
+        }
+
+        // --- Mosaic Filter Functionality ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const mosaicItems = document.querySelectorAll('.mosaic-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filterValue = btn.dataset.filter;
+
+                mosaicItems.forEach((item, index) => {
+                    if (filterValue === 'all') {
+                        item.style.display = 'block';
+                        item.style.animationDelay = `${index * 0.1}s`;
+                        item.classList.add('mosaic-item');
+                    } else {
+                        if (item.classList.contains(filterValue)) {
+                            item.style.display = 'block';
+                            item.style.animationDelay = `${index * 0.1}s`;
+                            item.classList.add('mosaic-item');
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Re-trigger animation
+                setTimeout(() => {
+                    mosaicItems.forEach(item => {
+                        if (item.style.display !== 'none') {
+                            item.style.animation = 'none';
+                            item.offsetHeight; // Trigger reflow
+                            item.style.animation = 'mosaicFadeIn 0.6s ease-out forwards';
+                        }
+                    });
+                }, 50);
+            });
+        });
+
+        // --- Intersection Observer for Animations ---
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Counter animation for stats
+                    if (entry.target.classList.contains('stat-item')) {
+                        const countElement = entry.target.querySelector('.stat-number');
+                        const targetCount = parseInt(entry.target.dataset.count);
+                        animateCounter(countElement, targetCount);
+                    }
+
+                    // Partnership stats animation
+                    if (entry.target.classList.contains('partnership-stat')) {
+                        const countElement = entry.target.querySelector('.stat-number');
+                        const targetCount = entry.target.dataset.count || countElement.textContent.replace(/\D/g, '');
+                        if (!countElement.classList.contains('animated')) {
+                            countElement.classList.add('animated');
+                            if (targetCount) {
+                                animateCounter(countElement, parseInt(targetCount));
+                            }
+                        }
+                    }
+
+                    // Company cloud animation
+                    if (entry.target.classList.contains('company-cloud-container')) {
+                        const tags = entry.target.querySelectorAll('.company-tag');
+                        tags.forEach((tag, index) => {
+                            setTimeout(() => {
+                                tag.style.opacity = '1';
+                                tag.style.transform = 'translateY(0)';
+                            }, index * 30);
+                        });
+                    }
+
+                    // Mosaic gallery animation
+                    if (entry.target.classList.contains('mosaic-gallery')) {
+                        const items = entry.target.querySelectorAll('.mosaic-item');
+                        items.forEach((item, index) => {
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                                item.style.transform = 'scale(1)';
+                            }, index * 100);
+                        });
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.stat-item, .partnership-stat, .company-cloud-container, .mosaic-gallery').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Set data attributes for partnership stats
+        const partnershipStats = document.querySelectorAll('.partnership-stat .stat-number');
+        partnershipStats[0].dataset.count = '200';
+        partnershipStats[1].dataset.count = '95';
+        partnershipStats[2].dataset.count = '85';
+        partnershipStats[3].textContent = '45K+';
+
+        // Initialize company tags with initial styles
+        document.querySelectorAll('.company-tag').forEach(tag => {
+            tag.style.opacity = '0';
+            tag.style.transform = 'translateY(20px)';
+            tag.style.transition = 'all 0.4s ease';
+        });
+
+        // Initialize mosaic items with initial styles
+        document.querySelectorAll('.mosaic-item').forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'scale(0.8)';
+        });
+
+        // --- Mobile Menu ---
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = hamburger.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // --- Study Path Tabs ---
+        const pathTabs = document.querySelectorAll('.path-tab-button');
+        const pathContents = document.querySelectorAll('.path-content-item');
+        
+        pathTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active from all tabs and contents
+                pathTabs.forEach(item => item.classList.remove('active'));
+                pathContents.forEach(item => item.classList.remove('active'));
+                
+                // Add active to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const targetContent = document.getElementById('path-' + tab.dataset.path);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                }
+            });
+        });
+
+        // --- Smooth scrolling for navigation links ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // --- Enhanced hover effects ---
+        document.querySelectorAll('.highlight-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.02) rotateY(5deg)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1) rotateY(0deg)';
+            });
+        });
+
+        // --- Company tag interactive effects ---
+        document.querySelectorAll('.company-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                // Create ripple effect
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255,255,255,0.6)';
+                ripple.style.pointerEvents = 'none';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s ease-out';
+                
+                const rect = tag.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (rect.width / 2 - size / 2) + 'px';
+                ripple.style.top = (rect.height / 2 - size / 2) + 'px';
+                
+                tag.style.position = 'relative';
+                tag.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add ripple animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // --- Enhanced Mosaic Gallery Interactions ---
+        document.querySelectorAll('.mosaic-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Create a simple lightbox effect
+                const overlay = document.createElement('div');
+                overlay.style.position = 'fixed';
+                overlay.style.top = '0';
+                overlay.style.left = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.backgroundColor = 'rgba(0,0,0,0.9)';
+                overlay.style.zIndex = '10000';
+                overlay.style.display = 'flex';
+                overlay.style.justifyContent = 'center';
+                overlay.style.alignItems = 'center';
+                overlay.style.cursor = 'pointer';
+
+                const img = this.querySelector('img').cloneNode();
+                img.style.maxWidth = '90%';
+                img.style.maxHeight = '90%';
+                img.style.objectFit = 'contain';
+                img.style.borderRadius = '10px';
+
+                overlay.appendChild(img);
+                document.body.appendChild(overlay);
+
+                overlay.addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                });
+
+                // Fade in effect
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.opacity = '1';
+                    overlay.style.transition = 'opacity 0.3s ease';
+                }, 10);
+            });
+        });
+
+    </script>
+
+</body>
+</html>
